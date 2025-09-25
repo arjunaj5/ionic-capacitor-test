@@ -1,0 +1,64 @@
+# This file contains the fastlane.tools configuration for Android builds
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+platform :android do
+  desc "Build Android APK for development"
+  lane :debug do
+    # Build the Ionic app
+    sh("npm run build")
+    
+    # Sync Capacitor
+    sh("npx cap sync android")
+    
+    # Build Android APK
+    gradle(
+      task: "assembleDebug",
+      project_dir: "android",
+      properties: {
+        "android.injected.version.name" => get_version_name,
+        "android.injected.version.code" => get_version_code
+      }
+    )
+    
+    # Get the APK path
+    apk_path = lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
+    
+    # Upload to Bitrise artifacts
+    if ENV['BITRISE_BUILD_URL']
+      sh("bitrise-artifact-upload #{apk_path}")
+    end
+    
+    UI.success("Debug APK built successfully: #{apk_path}")
+    apk_path
+  end
+
+  # Helper methods
+  def get_version_name
+    # Get version from package.json
+    version = JSON.parse(File.read("package.json"))["version"]
+    version
+  end
+
+  def get_version_code
+    # Generate version code based on timestamp or use environment variable
+    if ENV['BITRISE_BUILD_NUMBER']
+      ENV['BITRISE_BUILD_NUMBER'].to_i
+    else
+      Time.now.to_i
+    end
+  end
+end
