@@ -4,7 +4,6 @@ default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
 project_type: ionic
 
 workflows:
-  # Android Debug Build
   debug:
     steps:
     - activate-ssh-key@4:
@@ -43,5 +42,3 @@ app:
   - BITRISE_PROJECT_PATH: .
   - BITRISE_BUILD_NUMBER: $BITRISE_BUILD_NUMBER
   - BITRISE_BUILD_URL: $BITRISE_BUILD_URL
-  - GOOGLE_PLAY_SERVICE_ACCOUNT_EMAIL: $GOOGLE_PLAY_SERVICE_ACCOUNT_EMAIL
-  - GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_KEY_PATH: $GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_KEY_PATH
