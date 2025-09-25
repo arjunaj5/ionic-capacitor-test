@@ -19,10 +19,7 @@ platform :android do
   desc "Build Android APK for development"
   lane :debug do
     # Build the Ionic app
-    sh("npm run build")
-    
-    # Sync Capacitor
-    sh("npx cap sync android")
+    sh("ionic capacitor sync --prod")
     
     # Build Android APK
     gradle(
