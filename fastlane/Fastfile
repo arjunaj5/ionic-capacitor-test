@@ -45,11 +45,8 @@ platform :android do
 
   # Helper methods
   def get_version_name
-    # Get version from package.json (find it relative to current directory)
-    package_json_path = File.join(Dir.pwd, "package.json")
-    package_json_path = File.join(Dir.pwd, "..", "package.json") unless File.exist?(package_json_path)
-    version = JSON.parse(File.read(package_json_path))["version"]
-    version
+    # Simple fixed version
+    "v1"
   end
 
   def get_version_code
